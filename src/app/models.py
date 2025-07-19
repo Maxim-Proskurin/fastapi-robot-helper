@@ -22,3 +22,9 @@ class User(Base):
         String,
         nullable=False
     )
+    email = Column(
+        String(255),
+        unique=True,
+        nullable=False,
+        index=True
+    )
