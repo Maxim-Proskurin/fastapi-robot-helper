@@ -8,16 +8,8 @@ from uuid import UUID
 import re
 
 class UserCreate(BaseModel):
-    username: str = Field(
-        ...,
-        min_length=5,
-        max_length=30
-        )
-    password: str = Field(
-        ...,
-        min_length=6,
-        max_length=128 
-    )
+    username: str = Field(min_length=5, max_length=30)
+    password: str = Field(min_length=6, max_length=128)
     email: EmailStr
     
     @field_validator("username")
@@ -65,7 +57,6 @@ class UserLogin(BaseModel):
     
 class ScriptBase(BaseModel):
     name: str = Field(
-        ...,
         min_length=1,
         max_length=100
     )
