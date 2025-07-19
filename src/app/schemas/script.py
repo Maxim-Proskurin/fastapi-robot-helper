@@ -9,10 +9,8 @@ class ScriptBase(BaseModel):
     )
     content: str
     
-
-
 class ScriptRead(ScriptBase):
     id: UUID
-    
+
     model_config = {"from_attributes": True}
     

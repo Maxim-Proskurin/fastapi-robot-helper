@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from passlib.context import CryptContext
-from src.app.models import User
-from src.app.schemas import UserCreate, UserLogin
+from src.app.models.user import User
+from src.app.schemas.user import UserCreate, UserLogin
 
 pwd_context = CryptContext(
     schemes=["bcrypt"],
@@ -19,14 +19,14 @@ class UserService:
             select(User)
             .where(User.username == user_data.username)
         )
-        if existing_user := result_username.scalar_one_or_none():
+        if result_username.scalar_one_or_none():
             return None, "Пользователь с таким именем существует."
-        
+
         result_email = await db.execute(
             select(User)
             .where(User.email == user_data.email)
         )
-        if existing_user := result_email.scalar_one_or_none():
+        if result_email.scalar_one_or_none():
             return None, "Пользователь с таким email существует."
         
         hashed_password = pwd_context.hash(user_data.password)
