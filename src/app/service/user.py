@@ -15,6 +15,18 @@ class UserService:
         user_data: UserCreate,
         db: AsyncSession
     ) -> tuple[User | None , str | None]:
+        """
+        Создать нового пользователя.
+
+        Args:
+            user_data (UserCreate): Данные для создания пользователя.
+            db (AsyncSession): Асинхронная сессия БД.
+
+        Returns:
+            tuple[User | None, str | None]: Кортеж (пользователь, ошибка).
+                Если пользователь успешно создан — (User, None).
+                Если возникла ошибка — (None, сообщение об ошибке).
+        """
         result_username = await db.execute(
             select(User)
             .where(User.username == user_data.username)
@@ -46,6 +58,18 @@ class UserService:
         login_data: UserLogin,
         db: AsyncSession
     ) -> tuple[User | None, str | None]:
+        """
+        Аутентифицировать пользователя по email и паролю.
+
+        Args:
+            login_data (UserLogin): Данные для входа (email и пароль).
+            db (AsyncSession): Асинхронная сессия БД.
+
+        Returns:
+            tuple[User | None, str | None]: Кортеж (пользователь, ошибка).
+                Если аутентификация успешна — (User, None).
+                Если неуспешна — (None, сообщение об ошибке).
+        """
         result = await db.execute(
             select(User)
             .where(User.email == login_data.email)
