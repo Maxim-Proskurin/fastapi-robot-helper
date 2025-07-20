@@ -4,6 +4,7 @@ from fastapi import (
     HTTPException,
     status
 )
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from passlib.context import CryptContext
@@ -13,15 +14,18 @@ from src.app.schemas.user import (
     UserRead,
     UserUpdate
 )
+from uuid import UUID
 from src.app.models.user import User
 from src.app.service.user import UserService
 from src.app.core.database import get_db
 from src.app.core.jwt import (
     create_access_token,
     create_refresh_token,
-    decode_refresh_token
+    decode_refresh_token,
+    decode_access_token
 )
 router = APIRouter(prefix="/users", tags=["users"])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
 @router.post(
     "/register",
@@ -243,3 +247,26 @@ async def delete_user(
     await db.delete(user)
     await db.commit()
     return None, "Пользователь удален."
+
+def get_current_user_id(token: str = Depends(oauth2_scheme)) -> UUID:
+    """
+    Извлечь идентификатор пользователя (user_id) из access JWT-токена.
+
+    Args:
+        token (str): JWT access-токен, автоматически извлекается из заголовка Authorization.
+
+    Returns:
+        UUID: Идентификатор пользователя, полученный из payload токена ("sub").
+
+    Raises:
+        HTTPException: Если токен невалиден или не содержит user_id.
+    """
+    payload = decode_access_token(token)
+    if user_id := payload.get("sub"):
+        return UUID(user_id)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Не удалось получить user_id из токена"
+        )
+    
