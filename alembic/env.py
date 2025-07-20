@@ -4,9 +4,9 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from src.app.database import Base
+from src.app.core.database import Base
 from dotenv import load_dotenv
-from src.app.models import User
+from src.app.models.user import User
 
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
