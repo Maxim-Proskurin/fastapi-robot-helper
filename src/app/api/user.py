@@ -6,10 +6,12 @@ from fastapi import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from passlib.context import CryptContext
 from src.app.schemas.user import (
     UserCreate,
     UserLogin,
-    UserRead
+    UserRead,
+    UserUpdate
 )
 from src.app.models.user import User
 from src.app.service.user import UserService
@@ -162,15 +164,15 @@ async def list_users(
 @router.patch("/{user_id}", response_model=UserRead)
 async def update_user(
     user_id: str,
-    user_data: UserCreate,
+    user_data: UserUpdate,
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Обновить данные пользователя.
+    Обновить данные пользователя (только full_name и/или пароль).
 
     Args:
         user_id (str): UUID пользователя.
-        user_data (UserCreate): Новые данные пользователя.
+        user_data (UserUpdate): Новые данные пользователя.
         db (AsyncSession): Асинхронная сессия БД.
 
     Returns:
@@ -189,7 +191,19 @@ async def update_user(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Пользователь не найден"
         )
-    for field, value in user_data.dict(exclude_unset=True).items():
+    update_data = user_data.dict(exclude_unset=True)
+    if "password" in update_data and update_data["password"]:
+        pwd_context = CryptContext(
+            schemes=["bcrypt"],
+            deprecated="auto"
+            )
+        setattr(
+            user,
+            "hashed_password",
+            pwd_context.hash(update_data.pop("password")
+                )
+            )
+    for field, value in update_data.items():
         setattr(user, field, value)
     await db.commit()
     await db.refresh(user)
