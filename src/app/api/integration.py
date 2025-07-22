@@ -28,7 +28,10 @@ async def send_message(
     if isinstance(user_id, str):
         user_id = uuid.UUID(user_id)
     result = await ExternalMessenger.send_message(
-        to=data.to, text=data.text, api_url=data.api_url, api_token=data.api_token
+        to=data.to,
+        text=data.text,
+        api_url=data.api_url,
+        api_token=data.api_token
     )
     if "error" in result:
         raise HTTPException(

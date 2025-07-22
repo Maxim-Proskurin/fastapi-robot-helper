@@ -6,11 +6,23 @@ class SendMessageRequest(BaseModel):
     Схема для запроса на отправку сообщения через внешний API.
     """
 
-    to: str = Field(..., description=("Кому отправить:(номер, email, chat_id и т.д.)"))
-    text: str = Field(..., description="Текст сообщения")
-    api_url: str = Field(..., description="URL внешнего API")
+    to: str = Field(
+        ...,
+        description=(
+            "Кому отправить:(номер, email, chat_id и т.д.)"
+            )
+        )
+    text: str = Field(
+        ...,
+        description="Текст сообщения"
+    )
+    api_url: str = Field(
+        ...,
+        description="URL внешнего API"
+    )
     api_token: str | None = Field(
-        default=None, description="Токен для авторизации (если требуется)"
+        default=None,
+        description="Токен для авторизации (если требуется)"
     )
 
 

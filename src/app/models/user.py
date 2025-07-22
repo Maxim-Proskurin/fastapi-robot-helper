@@ -31,12 +31,39 @@ class User(Base):
         unique=True,
         nullable=False,
     )
-    username = Column(String(30), unique=True, index=True, nullable=False)
-    full_name = Column(String(100), nullable=False, default="", server_default="")
-    hashed_password = Column(String, nullable=False)
-    email = Column(String(255), unique=True, nullable=False, index=True)
-    is_active = Column(Boolean, nullable=False, default=False, server_default="1")
-    is_superuser = Column(Boolean, default=False, nullable=False)
+    username = Column(
+        String(30),
+        unique=True,
+        index=True,
+        nullable=False
+    )
+    full_name = Column(
+        String(100),
+        nullable=False,
+        default="",
+        server_default=""
+    )
+    hashed_password = Column(
+        String,
+        nullable=False
+    )
+    email = Column(
+        String(255),
+        unique=True,
+        nullable=False,
+        index=True
+    )
+    is_active = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="1"
+    )
+    is_superuser = Column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -49,4 +76,9 @@ class User(Base):
         onupdate=func.now(),
         nullable=True,
     )
-    last_login = Column(DateTime(timezone=True), nullable=True)
+    last_login = Column(
+        DateTime(
+            timezone=True
+            ),
+        nullable=True
+    )

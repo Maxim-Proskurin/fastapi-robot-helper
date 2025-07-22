@@ -32,9 +32,24 @@ class ExternalMessenger:
 
         async with httpx.AsyncClient() as client:
             try:
-                response = await client.post(api_url, json=payload, headers=headers)
+                response = await client.post(
+                    api_url,
+                    json=payload,
+                    headers=headers
+                )
                 response.raise_for_status()
                 return response.json()
             except httpx.HTTPError as e:
-                status_code = getattr(getattr(e, "response", None), "status_code", None)
-                return {"error": str(e), "status_code": status_code}
+                status_code = getattr(
+                    getattr(
+                        e,
+                        "response",
+                        None
+                        ),
+                    "status_code",
+                    None
+                )
+                return {
+                    "error": str(e),
+                    "status_code": status_code
+                    }

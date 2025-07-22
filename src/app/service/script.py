@@ -71,7 +71,14 @@ class ScriptService:
         Returns:
             list[Script]: Список скриптов пользователя.
         """
-        result = await db.execute(select(Script).where(Script.user_id == user_id))
+        result = await db.execute(
+            select(
+                Script
+                )
+            .where(
+                Script.user_id == user_id
+                )
+            )
         return list(result.scalars().all())
 
     @staticmethod

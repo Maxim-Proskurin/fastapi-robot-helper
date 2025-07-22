@@ -70,7 +70,11 @@ async def test_create_update_delete_script(test_app):
 
         # Создание скрипта
         script_data = {"name": "Test script", "content": "Hi {{name}}!"}
-        response = await ac.post("/scripts/", json=script_data, headers=headers)
+        response = await ac.post(
+            "/scripts/",
+            json=script_data,
+            headers=headers
+        )
         assert response.status_code == status.HTTP_201_CREATED
         script = response.json()
         script_id = script["id"]

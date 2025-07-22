@@ -10,7 +10,11 @@ from src.app.service.script import ScriptService
 router = APIRouter(prefix="/scripts", tags=["scripts"])
 
 
-@router.post("/", response_model=ScriptRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    response_model=ScriptRead,
+    status_code=status.HTTP_201_CREATED
+)
 async def create_script(
     script_data: ScriptCreate,
     user_id: UUID = Depends(get_current_user_id),
@@ -53,7 +57,9 @@ async def get_script(script_id: UUID, db: AsyncSession = Depends(get_db)):
 
 @router.patch("/{script_id}", response_model=ScriptRead)
 async def update_script(
-    script_id: str, script_data: ScriptUpdate, db: AsyncSession = Depends(get_db)
+    script_id: str,
+    script_data: ScriptUpdate,
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Обновить скрипт по id.
