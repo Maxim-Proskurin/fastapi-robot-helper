@@ -28,8 +28,5 @@ async def validate_pattern(data: RegexpPatternRequest):
     """
     Проверить, соответствует ли текст скрипта заданному регулярному выражению.
     """
-    is_valid = ScriptTextAnalyzer.validate_script_pattern(
-        data.text,
-        data.pattern
-        )
+    is_valid = ScriptTextAnalyzer.validate_script_pattern(data.text, data.pattern)
     return {"is_valid": is_valid}

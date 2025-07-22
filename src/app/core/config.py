@@ -12,8 +12,7 @@ class Settings:
     DB_PASSWORD: str = os.getenv("DB_PASSWORD", "")
     DB_NAME: str = os.getenv("DB_NAME", "")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
-        os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
     REFRESH_TOKEN_EXPIRE_MINUTES: int = int(
         os.getenv("REFRESH_TOKEN_EXPIRE_MINUTES", 1440)
     )
@@ -33,10 +32,7 @@ class Settings:
     def TEST_DATABASE_URL(self) -> str:
         url = os.getenv("TEST_DB_URL")
         if url and url.startswith("postgresql+psycopg2://"):
-            url = url.replace(
-                "postgresql+psycopg2://",
-                "postgresql+asyncpg://"
-                )
+            url = url.replace("postgresql+psycopg2://", "postgresql+asyncpg://")
         return url if url is not None else ""
 
 

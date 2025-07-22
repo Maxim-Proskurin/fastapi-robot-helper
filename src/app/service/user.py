@@ -64,10 +64,7 @@ class UserService:
                 Если аутентификация успешна — (User, None).
                 Если неуспешна — (None, сообщение об ошибке).
         """
-        result = await db.execute(
-            select(User)
-            .where(User.email == login_data.email)
-        )
+        result = await db.execute(select(User).where(User.email == login_data.email))
         user = result.scalar_one_or_none()
         if not user or not pwd_context.verify(
             login_data.password, getattr(user, "hashed_password", None)

@@ -30,14 +30,10 @@ class Script(Base):
     name = Column(String(100), nullable=False)
     content = Column(String, nullable=False)
     user_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     created_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=True
+        DateTime(timezone=True), server_default=func.now(), nullable=True
     )
     updated_at = Column(
         DateTime(timezone=True),

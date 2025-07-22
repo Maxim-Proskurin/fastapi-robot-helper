@@ -18,10 +18,7 @@ class ScriptTextAnalyzer:
         Returns:
             list[str]: Список найденных email-адресов.
         """
-        return re.findall(
-            r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+",
-            text
-            )
+        return re.findall(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+", text)
 
     @staticmethod
     def validate_script_pattern(text: str, pattern: str) -> bool:

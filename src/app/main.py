@@ -11,8 +11,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="FastAPI Robot Helper",
         description=(
-            "API для управления пользователями,"
-            "скриптами, интеграциями и regexp."
+            "API для управления пользователями," "скриптами, интеграциями и regexp."
         ),
         version="1.0.0",
     )

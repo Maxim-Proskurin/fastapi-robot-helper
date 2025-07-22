@@ -67,7 +67,7 @@ jobs:
         run: |
           poetry run isort --check .
           poetry run black --check .
-          poetry run flake8 --check .
+          poetry run flake8 .
 
       - name: Run tests with coverage
         run: poetry run pytest --cov=src/app --cov-report=xml
