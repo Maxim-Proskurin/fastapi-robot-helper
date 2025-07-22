@@ -10,6 +10,10 @@ venv/
 # IDE
 .idea/
 .vscode/
+.vscode
 
 # Env files
 .env
+
+#Test
+.pytest_cache

@@ -1,36 +1,28 @@
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    status
-)
-from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from passlib.context import CryptContext
-from src.app.schemas.user import (
-    UserCreate,
-    UserLogin,
-    UserRead,
-    UserUpdate
-)
 from uuid import UUID
-from src.app.models.user import User
-from src.app.service.user import UserService
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from passlib.context import CryptContext
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.app.core.database import get_db
 from src.app.core.jwt import (
     create_access_token,
     create_refresh_token,
     decode_refresh_token,
-    decode_access_token
 )
+from src.app.models.user import User
+from src.app.schemas.user import UserCreate, UserLogin, UserRead, UserUpdate
+from src.app.service.user import UserService
+
 router = APIRouter(prefix="/users", tags=["users"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
+
 
 @router.post(
     "/register",
     response_model=UserRead,
-    status_code=201)
+    status_code=201
+)
 async def register_user(
     user_data: UserCreate,
     db: AsyncSession = Depends(get_db)
@@ -39,22 +31,28 @@ async def register_user(
     Зарегистрировать нового пользователя.
 
     Args:
-        user_data (UserCreate): Данные для создания пользователя.
+        user_data (UserCreate):
+        Данные для создания пользователя.
         db (AsyncSession): Асинхронная сессия БД.
 
     Returns:
         UserRead: Данные зарегистрированного пользователя.
 
     Raises:
-        HTTPException: Если пользователь с таким email или username уже существует.
+        HTTPException:
+        Если пользователь с таким email или username уже существует.
     """
-    user, error = await UserService.create_user(user_data, db)
+    user, error = await UserService.create_user(
+        user_data,
+        db
+    )
     if error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=error or "Ошибка аутентификации"
-            )
+            detail=error or "Ошибка аутентификации",
+        )
     return user
+
 
 @router.post("/login")
 async def login_user(
@@ -78,7 +76,7 @@ async def login_user(
     if error or user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=error or "Ошибка аутентификации"
+            detail=error or "Ошибка аутентификации",
         )
     access_token = create_access_token({"sub": str(user.id)})
     refresh_token = create_refresh_token({"sub": str(user.id)})
@@ -86,9 +84,10 @@ async def login_user(
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
-        "message": "Успешный вход."
+        "message": "Успешный вход.",
     }
-    
+
+
 @router.post("/refresh")
 async def refresh_token_endpoints(refresh_token: str):
     """
@@ -108,21 +107,19 @@ async def refresh_token_endpoints(refresh_token: str):
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Недействительный refresh токен"
+            detail="Недействительный refresh токен",
         )
     new_access_token = create_access_token({"sub": user_id})
     new_refresh_token = create_refresh_token({"sub": user_id})
     return {
         "access_token": new_access_token,
         "refresh_token": new_refresh_token,
-        "token_type": "bearer"
+        "token_type": "bearer",
     }
-    
+
+
 @router.get("/{user_id}", response_model=UserRead)
-async def get_user(
-    user_id: str,
-    db: AsyncSession = Depends(get_db)
-):
+async def get_user(user_id: UUID, db: AsyncSession = Depends(get_db)):
     """
     Получить пользователя по id.
 
@@ -131,26 +128,23 @@ async def get_user(
         db (AsyncSession): Асинхронная сессия БД.
 
     Returns:
-        UserRead: Данные пользователя.
-
+    UserRead: Данные пользователя.
     Raises:
         HTTPException: Если пользователь не найден.
     """
-    result = await db.execute(
-        select(User)
-        .where(User.id == user_id)
-    )
+    result = await db.execute(select(User).where(User.id == user_id))
     if user := result.scalar_one_or_none():
         return user
     else:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Пользователь не найден."
-            )
+        )
+
 
 @router.get("/", response_model=list[UserRead])
 async def list_users(
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Получить список всех пользователей.
@@ -165,11 +159,10 @@ async def list_users(
     users = result.scalars().all()
     return users
 
+
 @router.patch("/{user_id}", response_model=UserRead)
 async def update_user(
-    user_id: str,
-    user_data: UserUpdate,
-    db: AsyncSession = Depends(get_db)
+    user_id: UUID, user_data: UserUpdate, db: AsyncSession = Depends(get_db)
 ):
     """
     Обновить данные пользователя (только full_name и/или пароль).
@@ -188,7 +181,7 @@ async def update_user(
     result = await db.execute(
         select(User)
         .where(User.id == user_id)
-    ) 
+    )
     user = result.scalar_one_or_none()
     if not user:
         raise HTTPException(
@@ -200,44 +193,39 @@ async def update_user(
         pwd_context = CryptContext(
             schemes=["bcrypt"],
             deprecated="auto"
-            )
+        )
         setattr(
             user,
             "hashed_password",
-            pwd_context.hash(update_data.pop("password")
-                )
-            )
+            pwd_context.hash(update_data.pop("password"))
+        )
     for field, value in update_data.items():
         setattr(user, field, value)
     await db.commit()
     await db.refresh(user)
     return user
 
+
 @router.delete(
     "/{user_id}",
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_user(
-    user_id: str,
+    user_id: UUID,
     db: AsyncSession = Depends(get_db)
 ):
+
     """
     Удалить пользователя по id.
-
     Args:
         user_id (str): UUID пользователя.
         db (AsyncSession): Асинхронная сессия БД.
-
     Returns:
         None
-
     Raises:
         HTTPException: Если пользователь не найден.
     """
-    result = await db.execute(
-        select(User)
-        .where(User.id == user_id)
-    )
+    result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user:
         raise HTTPException(
@@ -247,26 +235,3 @@ async def delete_user(
     await db.delete(user)
     await db.commit()
     return None, "Пользователь удален."
-
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> UUID:
-    """
-    Извлечь идентификатор пользователя (user_id) из access JWT-токена.
-
-    Args:
-        token (str): JWT access-токен, автоматически извлекается из заголовка Authorization.
-
-    Returns:
-        UUID: Идентификатор пользователя, полученный из payload токена ("sub").
-
-    Raises:
-        HTTPException: Если токен невалиден или не содержит user_id.
-    """
-    payload = decode_access_token(token)
-    if user_id := payload.get("sub"):
-        return UUID(user_id)
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Не удалось получить user_id из токена"
-        )
-    

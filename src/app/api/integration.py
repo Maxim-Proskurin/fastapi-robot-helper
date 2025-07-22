@@ -1,38 +1,33 @@
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    status
-)
-
-from src.app.api.user import get_current_user_id
+import uuid
 from uuid import UUID
-from src.app.service.integration import ExternalMessenger
+
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from src.app.depends.auth import get_current_user_id
 from src.app.schemas.integration import SendMessageRequest, SendMessageResponse
-
-
+from src.app.service.integration import ExternalMessenger
 
 router = APIRouter(prefix="/integration", tags=["integration"])
 
 
-
-
-
 @router.post("/send_message", response_model=SendMessageResponse)
 async def send_message(
-    data: SendMessageRequest,
-    user_id: UUID = Depends(get_current_user_id)
+    data: SendMessageRequest, user_id: UUID = Depends(get_current_user_id)
 ):
     """
     Отправить сообщение через внешний API (пример интеграции).
 
+    Требует авторизации через Bearer-токен (JWT).
+    user_id автоматически извлекается из access_token.
+
     Args:
         data (SendMessageRequest): Данные для отправки сообщения.
-        user_id (UUID): Идентификатор пользователя (для логирования/аудита).
 
     Returns:
-        SendMessageResponse: Ответ от внешнего API или ошибка.
+        dict: Ответ от внешнего API или ошибка.
     """
+    if isinstance(user_id, str):
+        user_id = uuid.UUID(user_id)
     result = await ExternalMessenger.send_message(
         to=data.to,
         text=data.text,
@@ -40,13 +35,8 @@ async def send_message(
         api_token=data.api_token
     )
     if "error" in result:
-        return SendMessageResponse(
-            status_code=result.get("status_code"),
-            error=result["error"],
-            data=None
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Ошибка внешнего API: {result['error']}",
         )
-    return SendMessageResponse(
-        status_code=200,
-        error=None,
-        data=result
-    )
+    return result

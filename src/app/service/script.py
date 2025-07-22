@@ -1,15 +1,18 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+import contextlib
+import uuid
+from uuid import UUID
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.app.models.script import Script
 from src.app.schemas.script import ScriptCreate, ScriptUpdate
-from uuid import UUID
+
 
 class ScriptService:
     @staticmethod
     async def create_script(
-        script_data: ScriptCreate,
-        user_id: UUID,
-        db: AsyncSession
+        script_data: ScriptCreate, user_id: UUID, db: AsyncSession
     ) -> Script:
         """
         Создать новый скрипт для пользователя.
@@ -26,9 +29,7 @@ class ScriptService:
             ValueError: Если скрипт не был создан (неожиданная ошибка).
         """
         script = Script(
-            name=script_data.name,
-            content=script_data.content,
-            user_id=user_id
+            name=script_data.name, content=script_data.content, user_id=user_id
         )
         db.add(script)
         await db.commit()
@@ -38,24 +39,22 @@ class ScriptService:
         return script
 
     @staticmethod
-    async def get_script(
-        script_id: UUID,
-        db: AsyncSession
-    ) -> Script | None:
+    async def get_script(script_id: UUID, db: AsyncSession) -> Script | None:
         """
         Получить скрипт по его идентификатору.
 
         Args:
-            script_id (UUID): Идентификатор скрипта.
+            script_id (UUID или str): Идентификатор скрипта.
             db (AsyncSession): Асинхронная сессия БД.
 
         Returns:
             Script | None: Скрипт, если найден, иначе None.
         """
-        result = await db.execute(
-            select(Script)
-            .where(Script.id == script_id)
-        )
+        if isinstance(script_id, str):
+            with contextlib.suppress(Exception):
+                script_id = uuid.UUID(script_id)
+
+        result = await db.execute(select(Script).where(Script.id == script_id))
         return result.scalar_one_or_none()
 
     @staticmethod
@@ -75,15 +74,12 @@ class ScriptService:
         """
         result = await db.execute(
             select(Script)
-            .where(Script.user_id == user_id)
-        )
+            .where(Script.user_id == user_id))
         return list(result.scalars().all())
 
     @staticmethod
     async def update_script(
-        script_id: UUID,
-        script_data: ScriptUpdate,
-        db: AsyncSession
+        script_id, script_data: ScriptUpdate, db: AsyncSession
     ) -> Script | None:
         """
         Обновить скрипт по идентификатору.
@@ -96,10 +92,11 @@ class ScriptService:
         Returns:
             Script | None: Обновлённый скрипт, если найден, иначе None.
         """
-        result = await db.execute(
-            select(Script)
-            .where(Script.id == script_id)
-        )
+        if isinstance(script_id, str):
+            with contextlib.suppress(Exception):
+                script_id = uuid.UUID(script_id)
+
+        result = await db.execute(select(Script).where(Script.id == script_id))
         script = result.scalar_one_or_none()
         if not script:
             return None
@@ -111,10 +108,7 @@ class ScriptService:
         return script
 
     @staticmethod
-    async def delete_script(
-        script_id: UUID,
-        db: AsyncSession
-    ) -> bool:
+    async def delete_script(script_id, db: AsyncSession) -> bool:
         """
         Удалить скрипт по идентификатору.
 
@@ -125,10 +119,11 @@ class ScriptService:
         Returns:
             bool: True, если скрипт удалён, иначе False.
         """
-        result = await db.execute(
-            select(Script)
-            .where(Script.id == script_id)
-        )
+        if isinstance(script_id, str):
+            with contextlib.suppress(Exception):
+                script_id = uuid.UUID(script_id)
+
+        result = await db.execute(select(Script).where(Script.id == script_id))
         script = result.scalar_one_or_none()
         if not script:
             return False

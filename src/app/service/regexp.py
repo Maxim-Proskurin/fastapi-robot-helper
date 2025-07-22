@@ -1,8 +1,10 @@
 import re
 
+
 class ScriptTextAnalyzer:
     """
-    Сервис для анализа и валидации текста скрипта с помощью регулярных выражений.
+    Сервис для анализа и валидации текста
+    скрипта с помощью регулярных выражений.
     """
 
     @staticmethod
@@ -16,12 +18,16 @@ class ScriptTextAnalyzer:
         Returns:
             list[str]: Список найденных email-адресов.
         """
-        return re.findall(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+", text)
+        return re.findall(
+            r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+",
+            text
+            )
 
     @staticmethod
     def validate_script_pattern(text: str, pattern: str) -> bool:
         """
-        Проверить, соответствует ли текст скрипта заданному регулярному выражению.
+        Проверить, соответствует ли текст
+        скрипта заданному регулярному выражению.
 
         Args:
             text (str): Текст скрипта.

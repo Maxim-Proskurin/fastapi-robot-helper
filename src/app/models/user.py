@@ -1,8 +1,11 @@
 import uuid
-from sqlalchemy import Column, DateTime, String, Boolean
+
+from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+
 from src.app.core.database import Base
+
 
 class User(Base):
     """
@@ -20,13 +23,14 @@ class User(Base):
         updated_at (datetime): Дата и время последнего обновления профиля.
         last_login (datetime): Дата и время последнего входа.
     """
+
     __tablename__ = "users"
     id = Column(
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         unique=True,
-        nullable=False
+        nullable=False,
     )
     username = Column(
         String(30),
@@ -36,7 +40,9 @@ class User(Base):
     )
     full_name = Column(
         String(100),
-        nullable=False
+        nullable=False,
+        default="",
+        server_default=""
     )
     hashed_password = Column(
         String,
@@ -48,11 +54,11 @@ class User(Base):
         nullable=False,
         index=True
     )
-    is_acrive = Column(
+    is_active = Column(
         Boolean,
         nullable=False,
-        default=False
-        
+        default=False,
+        server_default="1"
     )
     is_superuser = Column(
         Boolean,
@@ -63,10 +69,15 @@ class User(Base):
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
-        nullable=False
+        nullable=False,
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=True,
     )
     last_login = Column(
         DateTime(timezone=True),
-        nullable=False
+        nullable=True
     )
-    
