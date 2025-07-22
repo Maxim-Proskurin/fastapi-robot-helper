@@ -39,6 +39,7 @@ pytest = "^8.4.1"
 pytest-asyncio = "^1.1.0"
 pytest-cov = "^6.2.1"
 aiosqlite = "^0.21.0"
+isort = "^6.0.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
