@@ -1,9 +1,10 @@
 import uvicorn
 from fastapi import FastAPI
-from src.app.api.user import router as user_router
-from src.app.api.script import router as script_router
+
 from src.app.api.integration import router as integration_router
 from src.app.api.regexp import router as regexp_router
+from src.app.api.script import router as script_router
+from src.app.api.user import router as user_router
 from src.app.utils.utils import custom_openapi
 
 

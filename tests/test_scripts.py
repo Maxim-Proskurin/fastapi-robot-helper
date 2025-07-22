@@ -3,10 +3,7 @@ import asyncio
 import pytest
 from fastapi import FastAPI, status
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy.ext.asyncio import (
-    async_sessionmaker,
-    create_async_engine
-)
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from src.app.api.script import router as script_router
 from src.app.api.user import router as user_router

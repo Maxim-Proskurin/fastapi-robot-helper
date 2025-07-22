@@ -6,11 +6,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app.core.database import get_db
-from src.app.core.jwt import (
-    create_access_token,
-    create_refresh_token,
-    decode_refresh_token,
-)
+from src.app.core.jwt import (create_access_token, create_refresh_token,
+                              decode_refresh_token)
 from src.app.models.user import User
 from src.app.schemas.user import UserCreate, UserLogin, UserRead, UserUpdate
 from src.app.service.user import UserService
