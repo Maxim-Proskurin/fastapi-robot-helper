@@ -1,4 +1,4 @@
-import os # noqa: F401
+import os  # noqa: F401
 from logging.config import fileConfig
 
 from alembic import context
@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 from src.app.core.config import settings
 from src.app.core.database import Base
-from src.app.models.script import Script # noqa: F401
-from src.app.models.user import User # noqa: F401
+from src.app.models.script import Script  # noqa: F401
+from src.app.models.user import User  # noqa: F401
 
 load_dotenv()
 
