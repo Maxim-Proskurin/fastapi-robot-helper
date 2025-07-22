@@ -8,14 +8,17 @@ from alembic import context
 from src.app.core.database import Base
 from src.app.models.script import Script
 from src.app.models.user import User
+from src.app.core.config import settings
 
 load_dotenv()
 
 config = context.config
 
 
-url = os.getenv("ALEMBIC_DATABASE_URL")
-print("ALEMBIC DATABASE_URL:", url)
+url = settings.DATABASE_URL
+if url and url.startswith("postgresql+asyncpg://"):
+    url = url.replace("postgresql+asyncpg://", "postgresql+psycopg2://")
+
 if url:
     context.config.set_main_option("sqlalchemy.url", url)
 
