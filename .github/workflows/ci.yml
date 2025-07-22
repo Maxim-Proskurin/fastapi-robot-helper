@@ -53,7 +53,6 @@ jobs:
           echo "JWT_ALGORITHM=HS256" >> .env
           echo "TEST_DB_NAME=fastapi-robot-helper-test" >> .env
           echo "TEST_DB_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi-robot-helper-test" >> .env
-
       - name: Wait for Postgres
         run: |
           for i in {1..10}; do

@@ -15,6 +15,7 @@ config = context.config
 
 
 url = os.getenv("ALEMBIC_DATABASE_URL")
+print("ALEMBIC DATABASE_URL:", url)
 if url:
     context.config.set_main_option("sqlalchemy.url", url)
 
