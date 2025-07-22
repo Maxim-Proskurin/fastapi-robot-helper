@@ -114,7 +114,8 @@ async def get_user(user_id: UUID, db: AsyncSession = Depends(get_db)):
         db (AsyncSession): Асинхронная сессия БД.
 
     Returns:
-    UserRead: Данные пользователя.
+        UserRead: Данные пользователя.
+
     Raises:
         HTTPException: Если пользователь не найден.
     """
