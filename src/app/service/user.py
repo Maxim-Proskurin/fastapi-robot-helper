@@ -1,7 +1,6 @@
 from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.app.models.user import User
 from src.app.schemas.user import UserCreate, UserLogin
 

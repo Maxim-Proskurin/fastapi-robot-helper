@@ -3,7 +3,6 @@ import asyncio
 import pytest
 from fastapi import FastAPI, status
 from httpx import ASGITransport, AsyncClient
-
 from src.app.api.regexp import router as regexp_router
 
 

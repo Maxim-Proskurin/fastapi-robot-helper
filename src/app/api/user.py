@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.app.core.database import get_db
 from src.app.core.jwt import (
     create_access_token,

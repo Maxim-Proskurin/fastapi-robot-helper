@@ -2,7 +2,6 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from jose import JWTError, jwt
-
 from src.app.core.config import settings
 
 ALGORITHM = settings.JWT_ALGORITHM

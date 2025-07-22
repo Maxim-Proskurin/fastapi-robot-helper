@@ -2,7 +2,6 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.app.core.database import get_db
 from src.app.depends.auth import get_current_user_id
 from src.app.schemas.script import ScriptCreate, ScriptRead, ScriptUpdate

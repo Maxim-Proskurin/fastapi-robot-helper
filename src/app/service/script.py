@@ -4,7 +4,6 @@ from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from src.app.models.script import Script
 from src.app.schemas.script import ScriptCreate, ScriptUpdate
 

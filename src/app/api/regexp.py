@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 from src.app.schemas.regexp import RegexpPatternRequest, RegexpTextRequest
 from src.app.service.regexp import ScriptTextAnalyzer
 
