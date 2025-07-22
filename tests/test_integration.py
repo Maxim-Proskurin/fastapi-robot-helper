@@ -80,10 +80,11 @@ async def test_send_message_integration(test_app):
         }
         response = await ac.post(
             "/integration/send_message",
-            json=message_data, headers=headers
+            json=message_data,
+            headers=headers
         )
         # Ожидаем либо 200, либо 502 (если внешний API не доступен)
         assert response.status_code in (
             status.HTTP_200_OK,
             status.HTTP_502_BAD_GATEWAY
-        )
+            )

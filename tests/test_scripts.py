@@ -63,16 +63,12 @@ async def test_create_update_delete_script(test_app):
         await ac.post("/users/register", json=user_data)
 
         # Логин
-        login_data = {
-            "email": "testuser@ex.com",
-            "password": "Test123321@"
-            }
+        login_data = {"email": "testuser@ex.com", "password": "Test123321@"}
         response = await ac.post("/users/login", json=login_data)
         assert response.status_code == status.HTTP_200_OK
         access_token = response.json()["access_token"]
-        headers = {
-            "Authorization": f"Bearer {access_token}"
-            }
+        headers = {"Authorization": f"Bearer {access_token}"}
+
         # Создание скрипта
         script_data = {
             "name": "Test script",

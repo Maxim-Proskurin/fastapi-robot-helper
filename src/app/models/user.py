@@ -44,10 +44,7 @@ class User(Base):
         default="",
         server_default=""
     )
-    hashed_password = Column(
-        String,
-        nullable=False
-    )
+    hashed_password = Column(String, nullable=False)
     email = Column(
         String(255),
         unique=True,
@@ -77,7 +74,4 @@ class User(Base):
         onupdate=func.now(),
         nullable=True,
     )
-    last_login = Column(
-        DateTime(timezone=True),
-        nullable=True
-    )
+    last_login = Column(DateTime(timezone=True), nullable=True)

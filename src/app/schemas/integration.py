@@ -8,16 +8,10 @@ class SendMessageRequest(BaseModel):
 
     to: str = Field(
         ...,
-        description="Кому отправить (номер, email, chat_id и т.д.)"
+        description=("Кому отправить:(номер, email, chat_id и т.д.)")
     )
-    text: str = Field(
-        ...,
-        description="Текст сообщения"
-    )
-    api_url: str = Field(
-        ...,
-        description="URL внешнего API"
-    )
+    text: str = Field(..., description="Текст сообщения")
+    api_url: str = Field(..., description="URL внешнего API")
     api_token: str | None = Field(
         default=None,
         description="Токен для авторизации (если требуется)"
@@ -28,9 +22,9 @@ class SendMessageResponse(BaseModel):
     """
     Схема для ответа от внешнего API (можно расширять под нужды).
     """
-
     status_code: int | None = Field(
-        default=None, description="HTTP статус-код ответа внешнего API"
+        default=None,
+        description="HTTP статус-код ответа внешнего API"
     )
     error: str | None = Field(
         default=None,

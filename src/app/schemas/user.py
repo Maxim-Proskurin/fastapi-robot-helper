@@ -26,13 +26,11 @@ class UserCreate(BaseModel):
     @classmethod
     def validate_password(cls, v):
         if not re.search(r"\d", v):
-            raise ValueError("Пароль должен содержать хотя бы одну цифру.")
+            raise ValueError("Пароль должен содержать одну цифру.")
         if not re.search(r"[A-Za-z]", v):
-            raise ValueError("Пароль должен содержать хотя бы одну букву.")
+            raise ValueError("Пароль должен содержать одну букву.")
         if not re.search(r"[!@#$%^&*(),.?\\/:;{}|><\[\]]", v):
-            raise ValueError(
-                "Пароль должен содержать хотя бы один спецсимвол."
-                )
+            raise ValueError("Пароль должен содержать один спецсимвол.")
         easy_password = [
             "password",
             "123456",
@@ -82,15 +80,11 @@ class UserUpdate(BaseModel):
         if v is None:
             return v
         if not re.search(r"\d", v):
-            raise ValueError("Пароль должен содержать хотя бы одну цифру.")
+            raise ValueError("Пароль должен содержать одну цифру.")
         if not re.search(r"[A-Za-z]", v):
-            raise ValueError(
-                "Пароль должен содержать хотя бы одну букву."
-            )
+            raise ValueError("Пароль должен содержать одну букву.")
         if not re.search(r"[!@#$%^&*(),.?\\/:;{}|><\[\]]", v):
-            raise ValueError(
-                "Пароль должен содержать хотя бы один спецсимвол."
-            )
+            raise ValueError("Пароль должен содержать один спецсимвол.")
         easy_password = [
             "password",
             "123456",

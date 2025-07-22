@@ -74,7 +74,8 @@ class ScriptService:
         """
         result = await db.execute(
             select(Script)
-            .where(Script.user_id == user_id))
+            .where(Script.user_id == user_id)
+            )
         return list(result.scalars().all())
 
     @staticmethod

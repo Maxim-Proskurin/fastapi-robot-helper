@@ -15,7 +15,8 @@ class Settings:
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
         os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
     REFRESH_TOKEN_EXPIRE_MINUTES: int = int(
-        os.getenv("REFRESH_TOKEN_EXPIRE_MINUTES", 1440))
+        os.getenv("REFRESH_TOKEN_EXPIRE_MINUTES", 1440)
+    )
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", "")
     CELERY_RESULT_BACKEND: str = os.getenv("CELERY_RESULT_BACKEND", "")

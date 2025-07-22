@@ -6,8 +6,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app.core.database import get_db
-from src.app.core.jwt import (create_access_token, create_refresh_token,
-                              decode_refresh_token)
+from src.app.core.jwt import (
+    create_access_token,
+    create_refresh_token,
+    decode_refresh_token,
+)
 from src.app.models.user import User
 from src.app.schemas.user import UserCreate, UserLogin, UserRead, UserUpdate
 from src.app.service.user import UserService
@@ -39,10 +42,7 @@ async def register_user(
         HTTPException:
         Если пользователь с таким email или username уже существует.
     """
-    user, error = await UserService.create_user(
-        user_data,
-        db
-    )
+    user, error = await UserService.create_user(user_data, db)
     if error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -175,22 +175,16 @@ async def update_user(
     Raises:
         HTTPException: Если пользователь не найден.
     """
-    result = await db.execute(
-        select(User)
-        .where(User.id == user_id)
-    )
+    result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Пользователь не найден"
-        )
+            )
     update_data = user_data.dict(exclude_unset=True)
     if "password" in update_data and update_data["password"]:
-        pwd_context = CryptContext(
-            schemes=["bcrypt"],
-            deprecated="auto"
-        )
+        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
         setattr(
             user,
             "hashed_password",
@@ -203,15 +197,8 @@ async def update_user(
     return user
 
 
-@router.delete(
-    "/{user_id}",
-    status_code=status.HTTP_204_NO_CONTENT
-)
-async def delete_user(
-    user_id: UUID,
-    db: AsyncSession = Depends(get_db)
-):
-
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(user_id: UUID, db: AsyncSession = Depends(get_db)):
     """
     Удалить пользователя по id.
     Args:
@@ -222,7 +209,10 @@ async def delete_user(
     Raises:
         HTTPException: Если пользователь не найден.
     """
-    result = await db.execute(select(User).where(User.id == user_id))
+    result = await db.execute(
+        select(User)
+        .where(User.id == user_id)
+        )
     user = result.scalar_one_or_none()
     if not user:
         raise HTTPException(
