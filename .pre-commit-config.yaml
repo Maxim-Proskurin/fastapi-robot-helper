@@ -20,8 +20,3 @@ repos:
         args: ["--max-line-length=88", "--extend-ignore=E203,W503,E501"]
         stages: [commit]
 
-  - repo: https://github.com/PyCQA/flake8-black
-    rev: 0.3.6
-    hooks:
-      - id: flake8-black
-        stages: [commit]

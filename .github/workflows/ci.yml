@@ -63,10 +63,10 @@ jobs:
       - name: Run Alembic migrations
         run: poetry run alembic upgrade head
 
-      - name: Run pre-commit
-        run: |
-          poetry run pre-commit run --all-files
-          
+      - name: Run pre-commit hooks
+        run: poetry run pre-commit run --all-files
+
+
 
       - name: Run tests with coverage
         run: poetry run pytest --cov=src/app --cov-report=xml
