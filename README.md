@@ -6,6 +6,9 @@
 [![build](https://github.com/Maxim-Proskurin/fastapi-robot-helper/actions/workflows/ci.yml/badge.svg)](https://github.com/Maxim-Proskurin/fastapi-robot-helper/actions)
 [![codecov](https://codecov.io/gh/Maxim-Proskurin/fastapi-robot-helper/branch/main/graph/badge.svg)](https://codecov.io/gh/Maxim-Proskurin/fastapi-robot-helper)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Maxim-Proskurin/fastapi-robot-helper/main.svg)](https://results.pre-commit.ci/latest/github/Maxim-Proskurin/fastapi-robot-helper/main)
+[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)](https://pycqa.github.io/isort/)
+[![flake8](https://img.shields.io/badge/lint-flake8-blue.svg)](https://flake8.pycqa.org/en/latest/)
 
 ## ⚡️ Быстрый старт
 
@@ -63,22 +66,27 @@ uvicorn src.main:app --reload
 ```bash
 poetry run pytest --cov=src
 poetry run pytest --cov=src --cov-report=html
-# Откройте файл htmlcov/index.html в браузере
+
 ```
-- [Онлайн-отчёт о покрытии тестов (Codecov)](https://codecov.io/gh/Maxim-Proskurin/fastapi-robot-helper)
-  _(или откройте `htmlcov/index.html` после локального теста)_
 
 ## 🗂️ Структура проекта
 
-```
+```text
 .
 ├── src/
-│   ├── api/
-│   ├── db/
-│   ├── core/
-│   └── main.py
-├── tests/
-├── alembic/
+│   └── app/
+│       ├── api/           # Роутеры FastAPI (user, script, integration, regexp)
+│       ├── core/          # Конфиг, база, JWT, зависимости
+│       ├── models/        # SQLAlchemy модели
+│       ├── schemas/       # Pydantic схемы
+│       ├── service/       # Бизнес-логика (user, script, integration, regexp)
+│       ├── utils/         # Вспомогательные функции
+│       ├── depends/       # Зависимости FastAPI (auth и др.)
+│       └── main.py        # Точка входа FastAPI
+├── tests/                 # Pytest тесты
+├── alembic/               # Миграции Alembic
+│   ├── versions/          # Файлы миграций
+│   └── env.py             # Alembic конфиг
 ├── Dockerfile
 ├── docker-compose.yml
 ├── pyproject.toml
