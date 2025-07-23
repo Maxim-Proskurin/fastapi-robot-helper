@@ -1,28 +1,25 @@
-import os
+import os  # noqa: F401
 from logging.config import fileConfig
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
 
 from alembic import context
-from src.app.database import Base
 from dotenv import load_dotenv
-from src.app.models import User
+from sqlalchemy import engine_from_config, pool
+from src.app.core.config import settings
+from src.app.core.database import Base
+from src.app.models.script import Script  # noqa: F401
+from src.app.models.user import User  # noqa: F401
 
 load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
-if DATABASE_URL and DATABASE_URL.startswith("postgresql+asyncpg://"):
-    DATABASE_URL = DATABASE_URL.replace(
-        "postgresql+asyncpg://",
-        "postgresql+psycopg2://"
-    )
 
-    
-
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
-if DATABASE_URL:
-    config.set_main_option("sqlalchemy.url", DATABASE_URL)
+
+
+url = settings.DATABASE_URL
+if url and url.startswith("postgresql+asyncpg://"):
+    url = url.replace("postgresql+asyncpg://", "postgresql+psycopg2://")
+
+if url:
+    context.config.set_main_option("sqlalchemy.url", url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -79,9 +76,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

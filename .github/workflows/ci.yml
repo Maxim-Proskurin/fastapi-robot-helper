@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: fastapi-robot-helper-test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Copy test env
+        run: |
+          echo "DB_HOST=localhost" > .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_USER=postgres" >> .env
+          echo "DB_PASSWORD=postgres" >> .env
+          echo "DB_NAME=fastapi-robot-helper-test" >> .env
+          echo "DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi-robot-helper-test" >> .env
+          echo "SECRET_KEY=ci-secret-key" >> .env
+          echo "ACCESS_TOKEN_EXPIRE_MINUTES=60" >> .env
+          echo "REFRESH_TOKEN_EXPIRE_MINUTES=1440" >> .env
+          echo "JWT_ALGORITHM=HS256" >> .env
+          echo "TEST_DB_NAME=fastapi-robot-helper-test" >> .env
+          echo "TEST_DB_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi-robot-helper-test" >> .env
+      - name: Wait for Postgres
+        run: |
+          for i in {1..10}; do
+            pg_isready -h localhost -U postgres && break
+            sleep 3
+          done
+
+      - name: Run Alembic migrations
+        run: poetry run alembic upgrade head
+
+      - name: Run pre-commit hooks
+        run: poetry run pre-commit run --all-files
+
+
+
+      - name: Run tests with coverage
+        run: poetry run pytest --cov=src/app --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
