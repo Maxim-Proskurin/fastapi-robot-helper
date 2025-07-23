@@ -63,8 +63,8 @@ async def test_send_message_integration(test_app):
         # Логин
         login_data = {
             "email": "integrationuser@ex.com",
-            "password": "Test123321@"
-            }
+            "password": "Test123321@",
+        }
         response = await ac.post("/users/login", json=login_data)
         assert response.status_code == status.HTTP_200_OK
         access_token = response.json()["access_token"]
@@ -78,12 +78,7 @@ async def test_send_message_integration(test_app):
             "api_token": "fake-token",
         }
         response = await ac.post(
-            "/integration/send_message",
-            json=message_data,
-            headers=headers
+            "/integration/send_message", json=message_data, headers=headers
         )
         # Ожидаем либо 200, либо 502 (если внешний API не доступен)
-        assert response.status_code in (
-            status.HTTP_200_OK,
-            status.HTTP_502_BAD_GATEWAY
-        )
+        assert response.status_code in (status.HTTP_200_OK, status.HTTP_502_BAD_GATEWAY)

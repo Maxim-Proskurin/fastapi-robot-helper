@@ -18,10 +18,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.post("/register", response_model=UserRead, status_code=201)
-async def register_user(
-    user_data: UserCreate,
-    db: AsyncSession = Depends(get_db)
-):
+async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
     """
     Зарегистрировать нового пользователя.
 
@@ -47,10 +44,7 @@ async def register_user(
 
 
 @router.post("/login")
-async def login_user(
-    login_data: UserLogin,
-    db: AsyncSession = Depends(get_db)
-):
+async def login_user(login_data: UserLogin, db: AsyncSession = Depends(get_db)):
     """
     Аутентификация пользователя и выдача access/refresh токенов.
 
@@ -125,16 +119,12 @@ async def get_user(user_id: UUID, db: AsyncSession = Depends(get_db)):
     Raises:
         HTTPException: Если пользователь не найден.
     """
-    result = await db.execute(
-        select(User)
-        .where(User.id == user_id)
-    )
+    result = await db.execute(select(User).where(User.id == user_id))
     if user := result.scalar_one_or_none():
         return user
     else:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Пользователь не найден."
+            status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден."
         )
 
 
@@ -174,27 +164,16 @@ async def update_user(
     Raises:
         HTTPException: Если пользователь не найден.
     """
-    result = await db.execute(
-        select(User)
-        .where(User.id == user_id)
-    )
+    result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Пользователь не найден"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден"
         )
     update_data = user_data.dict(exclude_unset=True)
     if "password" in update_data and update_data["password"]:
-        pwd_context = CryptContext(
-            schemes=["bcrypt"],
-            deprecated="auto"
-        )
-        setattr(
-            user,
-            "hashed_password",
-            pwd_context.hash(update_data.pop("password"))
-        )
+        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        setattr(user, "hashed_password", pwd_context.hash(update_data.pop("password")))
     for field, value in update_data.items():
         setattr(user, field, value)
     await db.commit()
@@ -203,10 +182,7 @@ async def update_user(
 
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user(
-    user_id: UUID,
-    db: AsyncSession = Depends(get_db)
-):
+async def delete_user(user_id: UUID, db: AsyncSession = Depends(get_db)):
     """
     Удалить пользователя по id.
     Args:
@@ -221,7 +197,8 @@ async def delete_user(
     user = result.scalar_one_or_none()
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Пользователь не найден"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь не найден",
         )
     await db.delete(user)
     await db.commit()

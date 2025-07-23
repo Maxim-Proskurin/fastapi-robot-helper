@@ -14,8 +14,8 @@ def custom_openapi(app):
         "BearerAuth": {
             "type": "http",
             "scheme": "bearer",
-            "bearerFormat": "JWT"
-        }
+            "bearerFormat": "JWT",
+        },
     }
     # Добавляем замочек (security)
     for path in openapi_schema["paths"].values():

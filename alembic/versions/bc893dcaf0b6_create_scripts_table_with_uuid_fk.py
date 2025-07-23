@@ -26,19 +26,11 @@ def upgrade() -> None:
         sa.Column("id", sa.UUID(), nullable=False),
         sa.Column("username", sa.String(length=30), nullable=False),
         sa.Column(
-            "full_name",
-            sa.String(length=100),
-            server_default="",
-            nullable=False
+            "full_name", sa.String(length=100), server_default="", nullable=False
         ),
         sa.Column("hashed_password", sa.String(), nullable=False),
         sa.Column("email", sa.String(length=255), nullable=False),
-        sa.Column(
-            "is_active",
-            sa.Boolean(),
-            server_default="1",
-            nullable=False
-            ),
+        sa.Column("is_active", sa.Boolean(), server_default="1", nullable=False),
         sa.Column("is_superuser", sa.Boolean(), nullable=False),
         sa.Column(
             "created_at",
@@ -52,11 +44,7 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=True,
         ),
-        sa.Column(
-            "last_login",
-            sa.DateTime(timezone=True),
-            nullable=True
-            ),
+        sa.Column("last_login", sa.DateTime(timezone=True), nullable=True),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("id"),
     )
