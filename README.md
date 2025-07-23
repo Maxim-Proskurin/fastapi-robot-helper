@@ -5,7 +5,7 @@
 
 [![build](https://github.com/Maxim-Proskurin/fastapi-robot-helper/actions/workflows/ci.yml/badge.svg)](https://github.com/Maxim-Proskurin/fastapi-robot-helper/actions)
 [![codecov](https://codecov.io/gh/Maxim-Proskurin/fastapi-robot-helper/branch/main/graph/badge.svg)](https://codecov.io/gh/Maxim-Proskurin/fastapi-robot-helper)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Maxim-Proskurin/fastapi-robot-helper/main.svg)](https://results.pre-commit.ci/latest/github/Maxim-Proskurin/fastapi-robot-helper/main)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Maxim-Proskurin/fastapi-robot-helper/main.svg?style=flat-square)](https://results.pre-commit.ci/latest/github/Maxim-Proskurin/fastapi-robot-helper/main)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)](https://pycqa.github.io/isort/)
 [![flake8](https://img.shields.io/badge/lint-flake8-blue.svg)](https://flake8.pycqa.org/en/latest/)
@@ -107,11 +107,3 @@ poetry run pytest --cov=src --cov-report=html
 
 - **GitHub Actions:** автотесты, линтеры, покрытие, миграции.
 - **pre-commit:** автоформатирование и проверка кода ([интеграция с pre-commit.ci](https://pre-commit.ci/)).
-
-## 📋 Лицензия
-
-MIT
-
----
-
-_Для вопросов и предложений: [Issues](https://github.com/Maxim-Proskurin/fastapi-robot-helper/issues)_
